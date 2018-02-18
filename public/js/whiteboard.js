@@ -52,7 +52,6 @@ socket.on("message", function(data) {
     initWhiteBoard();
     context = canvas.getContext('2d');
   } else {
-    context = undefined;
   }
 });
 
