@@ -30,7 +30,7 @@ var current = {
 
 function send() {
   checkCorrectWord()
-  socket.emit("chat", getCookie("name") + ": " + document.getElementById("msg-input").value);
+  socket.emit("chat", "<b>" + getCookie("name") + ": </b>" + document.getElementById("msg-input").value);
   document.getElementById("msg-input").value = "";
 }
 
@@ -57,13 +57,13 @@ socket.on("chat", function(msg) {
 socket.on("receive names", function(data) {
   for (var i = 0; i < data.length; i++) {
     var name = data[i].userName;
-    document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + "</p>";
+    document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + " - 0</p>";
   }
 });
 
 socket.on("new name", function(data) {
   var name = data.userName;
-  document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + "</p>";
+  document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + " - 0</p>";
 });
 
 socket.on("countdown", function(data) {
