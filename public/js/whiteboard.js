@@ -45,13 +45,16 @@ socket.emit("join session", data);
 
 socket.emit("get names", {dataCode: code});
 
+var drawing = false;
 socket.on("message", function(data) {
   initWhiteBoard();
   context = canvas.getContext('2d');
   if (data.name == getCookie("name")) {
     currentWord = data.word;
     document.getElementById("msg").innerHTML = data.word;
+    drawing = true;
   } else {
+    drawing = false;
   }
 });
 
@@ -113,7 +116,7 @@ function initWhiteBoard() {
     context.lineWidth = 2;
     context.stroke();
     context.closePath();
-    if (!emit) { return; }
+    if (!emit || !drawing) { return; }
     var w = canvas.width;
     var h = canvas.height;
 
