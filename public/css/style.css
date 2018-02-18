@@ -144,7 +144,7 @@ canvas {
 #code {
   position: fixed;
   top: 5px;
-  left: 50%;
+  left: 75%;
   transform: translateX(-50%);
 }
 
