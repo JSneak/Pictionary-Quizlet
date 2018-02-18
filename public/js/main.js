@@ -10,7 +10,7 @@ socket.on("start game", function(data) {
 });
 
 socket.on("update points", function(data) {
-  var names = document.getElementById("names").childNodes;
+  var names = document.getElementByClassName("names")[0].childNodes;
 
   for (var i = 0; i < names.length; i++) {
     var text = names[i].innerHTML;
