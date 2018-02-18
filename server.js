@@ -59,7 +59,7 @@ io.on('connection', function(socket) {
       	socket.emit('user recieve code', {
       		Code: GivenCode
       	});//returns back to the caller
-        socket.broadcast.emit("new name", {userName:data.dataName, code:GivenCode, rank:"User"});
+        socket.broadcast.to(GivenCode).emit("new name", {userName:data.dataName, code:GivenCode, rank:"User"});
       } else {
         console.log("bad code: " + GivenCode);
       	socket.emit('Bad Code', {
@@ -71,54 +71,6 @@ io.on('connection', function(socket) {
 
   socket.on("get code", function() {
     socket.emit("recieve code", socket.room);
-  });
-
-  socket.on("Start Session", function(data) {
-  	io.sockets.emit('start session', {
-  					Code:data.code
-
-
-  	});
-  	for(var i=0;i<usernames.length;i++)
-  	{
-  		if(usernames[i]['rank'] == "Host")
-  		{
-  			if(usernames[i]['code'] == data.code)
-  			{
-  				usernames[i]['sessionState'] = true;
-  			}
-  		}
-  	}
-  });
-
-  socket.on("buzz event", function(Data) {
-
-  	io.sockets.emit('restrict', {
-  		Code:Data.userCode
-  	});
-  	io.sockets.emit('someone buzzed', {
-  		Code:Data.userCode,
-  		PlayerName:Data.userName,
-  		PlayerTeam:Data.userTeam
-  	});
-  });
-
-  socket.on("Correct Reset", function(Data) {
-  	io.sockets.emit('unrestrict', {
-  		Code:Data.code
-  	});
-  });
-
-  socket.on("Wrong Reset", function(Data) {
-  	io.sockets.emit('unrestrict', {
-  		Code:Data.code
-  	});
-  });
-
-  socket.on("End Session", function(Data) {
-  	io.sockets.emit('end of session', {
-  		Code:Data.code
-  	});
   });
 
   socket.on('disconnect', function(data) {
