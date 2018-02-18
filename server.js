@@ -145,8 +145,8 @@ io.on('connection', function(socket) {
   }
 
   function turnTimer(code) {
-    setTimeout(transitionTimer.bind(null, code), 20*1000);
-    io.sockets.to(code).emit("countdown", 20);
+    setTimeout(transitionTimer.bind(null, code), 25*1000);
+    io.sockets.to(code).emit("countdown", 25);
   }
 
 });
