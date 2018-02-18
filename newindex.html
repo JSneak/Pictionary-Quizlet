@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <script>
+         // Initialize Firebase
+         var config = {
+           apiKey: "AIzaSyBUqdelyjsQ4rZFWUdn4ZCzYpwXlJhkRQs",
+           authDomain: "discussion-f4214.firebaseapp.com",
+           databaseURL: "https://discussion-f4214.firebaseio.com",
+           projectId: "discussion-f4214",
+           storageBucket: "discussion-f4214.appspot.com",
+           messagingSenderId: "886727363835"
+         };
+         firebase.initializeApp(config);
+    </script>
+    <script src="js/index.js"></script>
+    <script src="https://use.fontawesome.com/d0bc9af035.js"></script>
+  </head>
+  <body>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <link rel="stylesheet" href="main.css">
+
+    <section id="particles-js" class="header">
+      <h1><!--img src="discmap.png"--></h1>
+      <input class="register" id="register" type="button" onClick="register()" value="Register">
+
+      <script>
+        if(firebase.auth().currentUser)
+        {
+          document.getElementById("register").value = "Go to Dashboard";
+            document.getElementById("register").onclick=function() {
+              location.href = "./dashboard.html";
+            };
+        }else{
+          document.getElementById("register").value = "Register/Sign In";
+        }
+
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            document.getElementById("register").value = "Go to Dashboard";
+            document.getElementById("register").onclick=function() {
+              location.href = "./dashboard.html";
+            };
+          } else {
+            document.getElementById("register").value = "Register/Sign In";
+          }
+        });
+      </script>
+
+      <h2>Join a Room</h2>
+      <input type="text" placeholder="Code (Ex: 1234)" id="code">
+      <input type="text" placeholder="Name (Ex: John Doe)" id="name">
+      <input class="join" type="button" onClick="joinSession()" value="Join">
+    </section>
+  </body>
+</html>
