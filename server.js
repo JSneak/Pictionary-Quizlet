@@ -14,11 +14,11 @@ var words = ["asdfkasdf", "sd"];
 
 
 io.on('connection', function(socket) {
-  function onConnection(socket){
-    socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
-  }
 
-  socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
+  socket.on('drawing', function(data) {
+    console.log("Drawing")
+    socket.broadcast.emit('drawing', data);
+  });
 
   socket.on("chat", function(msg) {
     io.sockets.to(socket.room).emit("chat", msg);
