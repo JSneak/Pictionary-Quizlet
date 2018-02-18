@@ -8,11 +8,6 @@ app.use(express.static(__dirname + '/public'));
 
 var Rooms = [];
 var usernames = [];//{}for json data, but we use [] because of the way we store the data
-var ValidCode = false;
-var genCode;
-var NumberOfGuests = 0;
-
-
 
 
 io.on('connection', function(socket) {
@@ -20,13 +15,13 @@ io.on('connection', function(socket) {
     socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
   }
 
+  socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
 
   socket.on("Create Session", function(Data) {
   		code = genRand();
   		var Name = Data.hostName;
   		socket.username = Name;
   		socket.room = code;
-  		NumberOfGuests++;
   		usernames.push({userName: Name, code:code, rank:"Host", sessionState: false});
   		socket.join(code);
   		socket.emit('recieve code', {
@@ -35,10 +30,9 @@ io.on('connection', function(socket) {
   	});
 
   socket.on("join session", function(data) {//Checks the code
-  		ValidCode = false;
   		var GivenName = data.dataName;
   		var GivenCode = data.dataCode;
-  		var GroupList = [];
+  		var groupList;
       if(Rooms.indexOf(data.dataCode) != -1)
       {
       	socket.room = data.dataCode;
@@ -54,19 +48,22 @@ io.on('connection', function(socket) {
       	});//returns back to the caller
       	io.sockets.emit('displayName', {
       		Code:GivenCode,
-      		List:GroupList,
-      		Team:GroupListTeam
+      		List:groupList
       	});//returns to everyone
+
       } else {
       	socket.emit('Bad Code', {
       		result:false
       	});
       }
+
   	});
 
   socket.on("Start Session", function(data) {
   	io.sockets.emit('start session', {
   					Code:data.code
+
+
   	});
   	for(var i=0;i<usernames.length;i++)
   	{
