@@ -6,20 +6,11 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + '/public'));
 
-var firebase = require('firebase');
-var app = firebase.initializeApp({});
 
+function onConnection(socket){
+  socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
+}
 
-
-io.on('connection', function(socket) {
-  function onConnection(socket) {
-    socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
-  }
-  onConnection();
-
-  function roundStartTimer {
-
-  }
-});
+io.on('connection', onConnection);
 
 http.listen(port, () => console.log('listening on port ' + port));
