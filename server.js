@@ -12,51 +12,6 @@ var currentRoomPlayers = {};
 var currentWords = {};
 var words = ["asdfkasdf", "sd"];
 
-function getUsers(code) {
-  var matching = [];
-  for (var i = 0; i < usernames.length; i++) {
-    if (parseInt(usernames[i].code) == parseInt(code)) {
-      matching.push(usernames[i]);
-    }
-  }
-  return matching;
-}
-
-function getUserByName(code, name) {
-  var users = getUsers(code);
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].userName == name) {
-      return users[i];
-    }
-  }
-}
-
-function getSocketByUsername(code, name) {
-  for (var i = 0; i < io.sockets.clients(code).length; i++) {
-    if (io.sockets.clients(code)[i].username == name) {
-      return io.sockets.clients(code)[i];
-    }
-  }
-}
-
-function choosePlayer(code) {
-  var user = getUsers(code)[currentRoomPlayers[code]];
-  currentRoomPlayers[code]++;
-  turnTimer(code);
-  var word = words[Math.floor(Math.random()*words.length)];
-  currentWords[code] = word;
-  io.sockets.to(code).emit("message", {"name": user.userName, "word": word});
-  return user;
-};
-
-function transitionTimer(code) {
-  setTimeout(choosePlayer.bind(null, code), 5*1000);
-}
-
-function turnTimer(code) {
-  setTimeout(transitionTimer.bind(null, code), 60*1000);
-  io.sockets.to(code).emit("countdown", 60);
-}
 
 io.on('connection', function(socket) {
   function onConnection(socket){
@@ -76,6 +31,7 @@ io.on('connection', function(socket) {
   		socket.username = Name;
   		socket.room = code;
       socket.rank = "Host";
+      socket.points = 0;
   		socket.join(code);
   		socket.emit('user recieve code', {
   			Code: code
@@ -97,6 +53,7 @@ io.on('connection', function(socket) {
       	socket.room = GivenCode;
       	socket.username = data.dataName;
         socket.rank = "User"
+        socket.points = 0;
       	usernames.push({userName:data.dataName, code:GivenCode, rank:"User"})
       	socket.join(GivenCode);
       	socket.emit('user recieve code', {
@@ -137,6 +94,57 @@ io.on('connection', function(socket) {
     var chosenUser = choosePlayer(data);
     io.sockets.to(data).emit("start game", {player: chosenUser.userName});
   });
+
+  socket.on("update points", function(data) {
+      socket.points += 10;
+      io.sockets.to(socket.room).emit("update points", {player: socket.username, points:socket.points});
+  });
+
+  function getUsers(code) {
+    var matching = [];
+    for (var i = 0; i < usernames.length; i++) {
+      if (parseInt(usernames[i].code) == parseInt(code)) {
+        matching.push(usernames[i]);
+      }
+    }
+    return matching;
+  }
+
+  function getUserByName(code, name) {
+    var users = getUsers(code);
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].userName == name) {
+        return users[i];
+      }
+    }
+  }
+
+  function getSocketByUsername(code, name) {
+    for (var i = 0; i < io.sockets.clients(code).length; i++) {
+      if (io.sockets.clients(code)[i].username == name) {
+        return io.sockets.clients(code)[i];
+      }
+    }
+  }
+
+  function choosePlayer(code) {
+    var user = getUsers(code)[currentRoomPlayers[code]];
+    currentRoomPlayers[code]++;
+    turnTimer(code);
+    var word = words[Math.floor(Math.random()*words.length)];
+    currentWords[code] = word;
+    io.sockets.to(code).emit("message", {"name": user.userName, "word": word});
+    return user;
+  };
+
+  function transitionTimer(code) {
+    setTimeout(choosePlayer.bind(null, code), 5*1000);
+  }
+
+  function turnTimer(code) {
+    setTimeout(transitionTimer.bind(null, code), 60*1000);
+    io.sockets.to(code).emit("countdown", 60);
+  }
 
 });
 

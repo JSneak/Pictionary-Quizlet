@@ -1,5 +1,6 @@
 'use strict';
 var socket = io();
+var currentWord;
 
 function getCookie(cname) {
     var name = cname + "=";
@@ -28,6 +29,7 @@ var current = {
 };
 
 function send() {
+  checkCorrectWord()
   socket.emit("chat", getCookie("name") + ": " + document.getElementById("msg-input").value);
   document.getElementById("msg-input").value = "";
 }
@@ -43,6 +45,7 @@ socket.emit("get names", {dataCode: code});
 
 socket.on("message", function(data) {
   if (data.name == getCookie("name")) {
+    currentWord = data.word;
     document.getElementById("msg").innerHTML = data.word;
   }
 });
@@ -66,6 +69,8 @@ socket.on("new name", function(data) {
 socket.on("countdown", function(data) {
   document.getElementById("countdown").innerHTML = data;
 });
+
+
 
 setInterval(function() {
   if (parseInt(document.getElementById("countdown").innerHTML) > 0)

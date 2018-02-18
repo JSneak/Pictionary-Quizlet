@@ -9,9 +9,13 @@ socket.on("start game", function(data) {
   }
 });
 
+socket.on("update points", function(data) {
+  console.log(data);
+});
+
 function checkCorrectWord() {
-  if(document.getElementById("msg").value == currentWord)
+  if(document.getElementById("msg-input").value == currentWord)
   {
-    //Get Static Amount of Points
+    socket.emit("update points", true);
   }
 }
