@@ -10,7 +10,15 @@ socket.on("start game", function(data) {
 });
 
 socket.on("update points", function(data) {
-  console.log(data);
+  var names = document.getElementById("names").childNodes;
+
+  for (var i = 0; i < names.length; i++) {
+    var text = names[i].innerHTML;
+    if (text.split(" - ")[0] == data.player) {
+      names[i].innerHTML = data.player + " - " + data.points;
+      return;
+    }
+  }
 });
 
 function checkCorrectWord() {

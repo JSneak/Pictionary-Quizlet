@@ -128,8 +128,12 @@ io.on('connection', function(socket) {
   }
 
   function choosePlayer(code) {
-    var user = getUsers(code)[currentRoomPlayers[code]];
     currentRoomPlayers[code]++;
+    if (currentRoomPlayers[code] >= io.of('/' + code).sockets.length) {
+      currentRoomPlayers[code] = 0;
+    }
+    console.log(io.of('/' + code).sockets);
+    var user = getUsers(code)[currentRoomPlayers[code]];
     turnTimer(code);
     var word = words[Math.floor(Math.random()*words.length)];
     currentWords[code] = word;
@@ -142,8 +146,8 @@ io.on('connection', function(socket) {
   }
 
   function turnTimer(code) {
-    setTimeout(transitionTimer.bind(null, code), 60*1000);
-    io.sockets.to(code).emit("countdown", 60);
+    setTimeout(transitionTimer.bind(null, code), 10*1000);
+    io.sockets.to(code).emit("countdown", 10);
   }
 
 });
