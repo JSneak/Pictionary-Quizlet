@@ -48,9 +48,9 @@ socket.emit("get names", {dataCode: code});
 var drawing = false;
 socket.on("message", function(data) {
   initWhiteBoard();
+  currentWord = data.word;
   context = canvas.getContext('2d');
   if (data.name == getCookie("name")) {
-    currentWord = data.word;
     document.getElementById("msg").innerHTML = data.word;
     drawing = true;
   } else {
