@@ -1,21 +1,25 @@
 var socket = io();
 
+var code;
+
 function joinSession() {
-  var data = {
-    dataName: document.getElementById("name").value,
-    dataCode: document.getElementById("code").value
-  }
-  socket.emit("join session", data)
+  document.cookie="name=" + document.getElementById("name").value;
+  document.cookie="code=" + document.getElementById("code").value;
+  location.href = "http://localhost:3000/whiteboard.html";
 }
 
 function createSession() {
+
   var data = {
     hostName: document.getElementById("hostName").value
   }
   socket.emit("Create Session", data);
+
+  document.cookie="name=" + document.getElementById("hostName").value;
 }
 
 socket.on("user recieve code", function(data) {
-console.log("fucking lit bruh")
-  location.href = "http://localhost:3000/whiteboard.html"
+  code = data.Code;
+  document.cookie="code=" + code;
+  location.href = "http://localhost:3000/whiteboard.html";
 });

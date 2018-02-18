@@ -17,11 +17,26 @@ html, body {
  * Canvas
  */
 
+ .chat {
+   width: 500px;
+ }
+
+ .chat .names {
+   background-color: #ccc;
+   min-height: 100px;
+   padding: 15px;
+ }
+
+ .main {
+   margin-left: 500px;
+   padding-left: 30px;
+ }
+
 .whiteboard {
   height: 100%;
   width: 100%;
   position: absolute;
-  left: 0;
+  left: 500px;
   right: 0;
   bottom: 0;
   top: 0;

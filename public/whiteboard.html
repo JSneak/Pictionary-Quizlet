@@ -7,15 +7,25 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 </head>
 <body>
-  <canvas class="whiteboard" ></canvas>
 
-  <div class="colors">
-    <div class="color black"></div>
-    <div class="color red"></div>
-    <div class="color green"></div>
-    <div class="color blue"></div>
-    <div class="color yellow"></div>
+  <div class="chat">
+    <div class="names">
+
+    </div>
   </div>
+
+  <div class="main">
+    <canvas id="canvas" class="whiteboard" ></canvas>
+
+    <div class="colors">
+      <div class="color black"></div>
+      <div class="color red"></div>
+      <div class="color green"></div>
+      <div class="color blue"></div>
+      <div class="color yellow"></div>
+    </div>
+  </div>
+
   <script src="./js/main.js"></script>
   <script src="./js/whiteboard.js"></script>
 </body>

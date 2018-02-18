@@ -9,6 +9,15 @@ app.use(express.static(__dirname + '/public'));
 var Rooms = [];
 var usernames = [];//{}for json data, but we use [] because of the way we store the data
 
+function getUsers(code) {
+  var matching = [];
+  for (var i = 0; i < usernames.length; i++) {
+    if (parseInt(usernames[i].code) == parseInt(code)) {
+      matching.push(usernames[i]);
+    }
+  }
+  return matching;
+}
 
 io.on('connection', function(socket) {
   function onConnection(socket){
@@ -24,15 +33,19 @@ io.on('connection', function(socket) {
   		socket.username = Name;
   		socket.room = code;
       socket.rank = "Host";
-  		usernames.push({userName: Name, code:code, rank:"Host", sessionState: false});
   		socket.join(code);
-  		socket.emit('recieve code', {
+  		socket.emit('user recieve code', {
   			Code: code
   		});
   	});
 
+    socket.on("get names", function(data) {
+      var code = parseInt(data.dataCode);
+      groupList = getUsers(code);
+      socket.emit("receive names", groupList);
+    })
+
   socket.on("join session", function(data) {//Checks the code
-    
   		var GivenName = data.dataName;
   		var GivenCode = parseInt(data.dataCode);
   		var groupList;
@@ -43,20 +56,12 @@ io.on('connection', function(socket) {
         socket.rank = "User"
       	usernames.push({userName:data.dataName, code:GivenCode, rank:"User"})
       	socket.join(GivenCode);
-      	if((usernames.map(function(e) { return e.code; }).indexOf(GivenCode)) != -1)
-      	{
-      		groupList = usernames[usernames.map(function(e) { return e.code; }).indexOf(GivenCode)]["userName"];
-      	}
-        console.log("asd")
       	socket.emit('user recieve code', {
       		Code: GivenCode
       	});//returns back to the caller
-      	io.sockets.emit('displayName', {
-      		Code:GivenCode,
-      		List:groupList
-      	});//returns to everyone
-
+        socket.broadcast.emit("new name", {userName:data.dataName, code:GivenCode, rank:"User"});
       } else {
+        console.log("bad code: " + GivenCode);
       	socket.emit('Bad Code', {
       		result:false
       	});

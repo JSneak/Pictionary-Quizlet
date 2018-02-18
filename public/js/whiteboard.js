@@ -1,15 +1,33 @@
 'use strict';
+var socket = io();
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+var code = getCookie("code");
+
+var drawing = false;
+var canvas = document.getElementsByClassName('whiteboard')[0];
+var colors = document.getElementsByClassName('color');
+var context = canvas.getContext('2d');
+var current = {
+  color: 'black'
+};
 
 function initWhiteBoard() {
-
-  var canvas = document.getElementsByClassName('whiteboard')[0];
-  var colors = document.getElementsByClassName('color');
-  var context = canvas.getContext('2d');
-
-  var current = {
-    color: 'black'
-  };
-  var drawing = false;
 
   canvas.addEventListener('mousedown', onMouseDown, false);
   canvas.addEventListener('mouseup', onMouseUp, false);
@@ -22,8 +40,30 @@ function initWhiteBoard() {
 
   socket.on('drawing', onDrawingEvent);
 
+  // join
+  var data = {
+    dataName: getCookie("name"),
+    dataCode: code
+  }
+  socket.emit("join session", data);
+
+  socket.emit("get names", {dataCode: code});
+
+  socket.on("receive names", function(data) {
+    for (var i = 0; i < data.length; i++) {
+      var name = data[i].userName;
+      document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + "</p>";
+    }
+  });
+
+  socket.on("new name", function(data) {
+    var name = data.userName;
+    document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + "</p>";
+  });
+
   window.addEventListener('resize', onResize, false);
   onResize();
+}
 
 
   function drawLine(x0, y0, x1, y1, color, emit){
@@ -47,22 +87,24 @@ function initWhiteBoard() {
     });
   }
 
+  var offset = 500;
+
   function onMouseDown(e){
     drawing = true;
-    current.x = e.clientX;
+    current.x = e.clientX - offset;
     current.y = e.clientY;
   }
 
   function onMouseUp(e){
     if (!drawing) { return; }
     drawing = false;
-    drawLine(current.x, current.y, e.clientX, e.clientY, current.color, true);
+    drawLine(current.x, current.y, e.clientX - offset, e.clientY, current.color, true);
   }
 
   function onMouseMove(e){
     if (!drawing) { return; }
-    drawLine(current.x, current.y, e.clientX, e.clientY, current.color, true);
-    current.x = e.clientX;
+    drawLine(current.x, current.y, e.clientX - offset, e.clientY, current.color, true);
+    current.x = e.clientX - offset;
     current.y = e.clientY;
   }
 
@@ -95,4 +137,4 @@ function initWhiteBoard() {
     canvas.height = window.innerHeight;
   }
 
-};
+initWhiteBoard();
