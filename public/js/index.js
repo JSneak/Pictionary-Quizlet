@@ -5,7 +5,7 @@ var code;
 function joinSession() {
   document.cookie="name=" + document.getElementById("name").value;
   document.cookie="code=" + document.getElementById("code").value;
-  location.href = "http://localhost:3000/whiteboard.html";
+  location.href = "./whiteboard.html";
 }
 
 function createSession() {
@@ -21,5 +21,5 @@ function createSession() {
 socket.on("user recieve code", function(data) {
   code = data.Code;
   document.cookie="code=" + code;
-  location.href = "http://localhost:3000/hostWhiteboard.html";
+  location.href = "./hostWhiteboard.html";
 });

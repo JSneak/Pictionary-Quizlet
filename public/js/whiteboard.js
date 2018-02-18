@@ -28,6 +28,8 @@ var current = {
   color: 'black'
 };
 
+document.getElementById("code").innerHTML = "Code: " + getCookie("code");
+
 function send() {
   checkCorrectWord()
   socket.emit("chat", "<b>" + getCookie("name") + ": </b>" + document.getElementById("msg-input").value);
