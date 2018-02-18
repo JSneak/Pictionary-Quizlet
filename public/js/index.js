@@ -16,5 +16,6 @@ function createSession() {
 }
 
 socket.on("user recieve code", function(data) {
-  location.href = "whiteboard.html"
+console.log("fucking lit bruh")
+  location.href = "http://localhost:3000/whiteboard.html"
 });

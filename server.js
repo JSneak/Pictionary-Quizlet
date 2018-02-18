@@ -18,10 +18,12 @@ io.on('connection', function(socket) {
   socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
 
   socket.on("Create Session", function(Data) {
+      console.log(Data)
   		code = genRand();
   		var Name = Data.hostName;
   		socket.username = Name;
   		socket.room = code;
+      socket.rank = "Host";
   		usernames.push({userName: Name, code:code, rank:"Host", sessionState: false});
   		socket.join(code);
   		socket.emit('recieve code', {
@@ -30,19 +32,22 @@ io.on('connection', function(socket) {
   	});
 
   socket.on("join session", function(data) {//Checks the code
+    
   		var GivenName = data.dataName;
-  		var GivenCode = data.dataCode;
+  		var GivenCode = parseInt(data.dataCode);
   		var groupList;
-      if(Rooms.indexOf(data.dataCode) != -1)
+      if(Rooms.indexOf(GivenCode) != -1)
       {
-      	socket.room = data.dataCode;
+      	socket.room = GivenCode;
       	socket.username = data.dataName;
-      	usernames.push({userName:data.dataName, code:data.dataCode, rank:"User"})
-      	socket.join(data.dataCode);
-      	if((usernames.map(function(e) { return e.code; }).indexOf(data.dataCode);) != -1)
+        socket.rank = "User"
+      	usernames.push({userName:data.dataName, code:GivenCode, rank:"User"})
+      	socket.join(GivenCode);
+      	if((usernames.map(function(e) { return e.code; }).indexOf(GivenCode)) != -1)
       	{
-      		groupList = usernames[usernames.map(function(e) { return e.code; }).indexOf(data.dataCode)]["userName"];
+      		groupList = usernames[usernames.map(function(e) { return e.code; }).indexOf(GivenCode)]["userName"];
       	}
+        console.log("asd")
       	socket.emit('user recieve code', {
       		Code: GivenCode
       	});//returns back to the caller
@@ -58,6 +63,10 @@ io.on('connection', function(socket) {
       }
 
   	});
+
+  socket.on("get code", function() {
+    socket.emit("recieve code", socket.room);
+  });
 
   socket.on("Start Session", function(data) {
   	io.sockets.emit('start session', {
@@ -108,39 +117,31 @@ io.on('connection', function(socket) {
   });
 
   socket.on('disconnect', function(data) {
-  	for(i=0;i<usernames.length;i++)
-  	{
-  		if(usernames[i]['userName'] == socket.username)
-  		{
-  			if(usernames[i]['rank'] == 'User')
-  			{
-  				NumberOfGuests--;
-  			}else if(usernames[i]['rank'] == 'Host')
-  			{
-  				for(j=0;j<Rooms.length;j++)
-  				{
-  					if(Rooms[j] == usernames[i]['code'])
-  					{
-  					io.sockets.emit('end of session',{
-  						Code:usernames[i]['code']
-  					})
-  					Rooms.splice(j,1);
-  					NumberOfGuests--;
-  					}
-  				}
-  			}
-  			usernames.splice(i,1);
-  		}
-  	}
-  	socket.leave(socket.room);
-  	});
+    console.log("Disconnect")
+    console.log(data)
+    if((usernames.map(function(e) { return e.userName; }).indexOf(socket.username)) != -1)
+    {
+      if((usernames.map(function(e) { return e.rank; }).indexOf("Host")) != -1)
+      {
+        io.sockets.emit('end of session',{
+          Code:socket.room
+        })
+        Rooms.splice((usernames.map(function(e) { return e.rank; }).indexOf(socket.rank)),1);
+      }
+      usernames.splice((usernames.map(function(e) { return e.userName; }).indexOf(socket.username)),1);
+    }
+    socket.leave(socket.room);
+  });
+
 });
 
 function genRand() {
 	roomCode = Math.floor(Math.random() * 100000);
+  var unique = true;
   while(unique) {
     if(Rooms.indexOf(roomCode) == -1) {
       Rooms.push(roomCode);
+      console.log(Rooms);
       return roomCode;
     }
   }

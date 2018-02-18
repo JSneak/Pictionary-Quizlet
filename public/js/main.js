@@ -1,5 +1,7 @@
 var socket = io();
 
-socket.on();
+socket.on("recieve code", function(data) {
+  console.log(data)
+});
 
-socket.emit();
+socket.emit("get code");
