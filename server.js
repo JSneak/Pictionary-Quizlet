@@ -10,13 +10,12 @@ var Rooms = [];
 var usernames = [];//{}for json data, but we use [] because of the way we store the data
 var currentRoomPlayers = {};
 var currentWords = {};
-var words = ["asdfkasdf", "sd"];
+var words = ["Nuts", "Tyranasaurus", "Bird","Lizard"];
 
 
 io.on('connection', function(socket) {
 
   socket.on('drawing', function(data) {
-    console.log("Drawing")
     socket.broadcast.emit('drawing', data);
   });
 
