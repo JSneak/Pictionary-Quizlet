@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Socket.IO whiteboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+</head>
+<body>
+<div class="hidden">
+  <div id="modal">
+    <div id="text-fields">
+      <input type="text" placeholder="Lobby Name" id="userName">
+      <input type="text" placeholder="Ex: 666666" id="lobbyCode">
+    </div>
+    <div id="button-field">
+      <input type="button" onClick="" value="Join Lobby">
+    </div>
+  </div>
+</div>
+<div class="hidden">
+  <canvas class="whiteboard" ></canvas>
+
+  <div class="colors">
+    <div class="color black"></div>
+    <div class="color red"></div>
+    <div class="color green"></div>
+    <div class="color blue"></div>
+    <div class="color yellow"></div>
+  </div>
+</div>
+  <script src="/js/main.js"></script>
+  <script src="/js/whiteboard.js"></script>
+</body>
+</html>
