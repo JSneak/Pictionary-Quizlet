@@ -116,17 +116,19 @@ function initWhiteBoard() {
     context.lineWidth = 2;
     context.stroke();
     context.closePath();
-    if (!emit || !drawing) { return; }
+    if (!emit) { return; }
     var w = canvas.width;
     var h = canvas.height;
 
-    socket.emit('drawing', {
-      x0: x0 / w,
-      y0: y0 / h,
-      x1: x1 / w,
-      y1: y1 / h,
-      color: color
-    });
+    if (drawing) {
+      socket.emit('drawing', {
+        x0: x0 / w,
+        y0: y0 / h,
+        x1: x1 / w,
+        y1: y1 / h,
+        color: color
+      });
+    }
   }
 
   var offset = 500;
