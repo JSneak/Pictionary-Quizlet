@@ -91,7 +91,8 @@ io.on('connection', function(socket) {
   });
 
   socket.on("start game", function(data) {
-    var chosenUser = choosePlayer(data);
+    words = data.wordDeck
+    var chosenUser = choosePlayer(data.code);
     io.sockets.to(data).emit("start game", {player: chosenUser.userName});
   });
 
