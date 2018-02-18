@@ -22,6 +22,7 @@ socket.on("update points", function(data) {
 });
 
 function checkCorrectWord() {
+  console.log(currentWord)
   if(document.getElementById("msg-input").value == currentWord)
   {
     socket.emit("update points", true);
