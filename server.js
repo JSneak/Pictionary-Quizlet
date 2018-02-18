@@ -129,10 +129,9 @@ io.on('connection', function(socket) {
 
   function choosePlayer(code) {
     currentRoomPlayers[code]++;
-    if (currentRoomPlayers[code] >= io.of('/' + code).sockets.length) {
+    if (currentRoomPlayers[code] >= io.sockets.adapter.rooms[code].length) {
       currentRoomPlayers[code] = 0;
     }
-    console.log(io.of('/' + code).sockets);
     var user = getUsers(code)[currentRoomPlayers[code]];
     turnTimer(code);
     var word = words[Math.floor(Math.random()*words.length)];
