@@ -65,6 +65,10 @@ io.on('connection', function(socket) {
 
   socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
 
+  socket.on("chat", function(msg) {
+    io.sockets.to(socket.room).emit("chat", msg);
+  })
+
   socket.on("Create Session", function(Data) {
       console.log(Data)
   		code = genRand();

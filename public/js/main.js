@@ -10,7 +10,7 @@ socket.on("start game", function(data) {
 });
 
 function checkCorrectWord() {
-  if(document.getElementById("chatArea").innerHTML == currentWord)
+  if(document.getElementById("msg").value == currentWord)
   {
     //Get Static Amount of Points
   }
