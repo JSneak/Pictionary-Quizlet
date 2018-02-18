@@ -14,9 +14,6 @@ var words = ["asdfkasdf", "sd"];
 
 
 io.on('connection', function(socket) {
-  function onConnection(socket){
-    socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
-  }
 
   socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
 

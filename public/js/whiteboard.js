@@ -50,6 +50,7 @@ socket.on("message", function(data) {
     currentWord = data.word;
     document.getElementById("msg").innerHTML = data.word;
     initWhiteBoard();
+    context = canvas.getContext('2d');
   } else {
     context = undefined;
   }
