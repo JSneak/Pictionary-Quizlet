@@ -27,6 +27,27 @@ var current = {
   color: 'black'
 };
 
+// join
+var data = {
+  dataName: getCookie("name"),
+  dataCode: code
+}
+socket.emit("join session", data);
+
+socket.emit("get names", {dataCode: code});
+
+socket.on("receive names", function(data) {
+  for (var i = 0; i < data.length; i++) {
+    var name = data[i].userName;
+    document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + "</p>";
+  }
+});
+
+socket.on("new name", function(data) {
+  var name = data.userName;
+  document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + "</p>";
+});
+
 function initWhiteBoard() {
 
   canvas.addEventListener('mousedown', onMouseDown, false);
@@ -39,27 +60,6 @@ function initWhiteBoard() {
   }
 
   socket.on('drawing', onDrawingEvent);
-
-  // join
-  var data = {
-    dataName: getCookie("name"),
-    dataCode: code
-  }
-  socket.emit("join session", data);
-
-  socket.emit("get names", {dataCode: code});
-
-  socket.on("receive names", function(data) {
-    for (var i = 0; i < data.length; i++) {
-      var name = data[i].userName;
-      document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + "</p>";
-    }
-  });
-
-  socket.on("new name", function(data) {
-    var name = data.userName;
-    document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + "</p>";
-  });
 
   window.addEventListener('resize', onResize, false);
   onResize();
