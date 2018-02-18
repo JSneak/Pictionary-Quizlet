@@ -45,16 +45,16 @@ socket.emit("join session", data);
 
 socket.emit("get names", {dataCode: code});
 
-var drawing = false;
+var drawingAllowed = false;
 socket.on("message", function(data) {
   initWhiteBoard();
   currentWord = data.word;
   context = canvas.getContext('2d');
   if (data.name == getCookie("name")) {
     document.getElementById("msg").innerHTML = data.word;
-    drawing = true;
+    drawingAllowed = true;
   } else {
-    drawing = false;
+    drawingAllowed = false;
   }
 });
 
@@ -109,6 +109,7 @@ function initWhiteBoard() {
 
 
   function drawLine(x0, y0, x1, y1, color, emit){
+    if (emit && !drawingAllowed) { return; }
     context.beginPath();
     context.moveTo(x0, y0);
     context.lineTo(x1, y1);
@@ -120,7 +121,7 @@ function initWhiteBoard() {
     var w = canvas.width;
     var h = canvas.height;
 
-    if (drawing) {
+    if (drawingAllowed) {
       socket.emit('drawing', {
         x0: x0 / w,
         y0: y0 / h,
