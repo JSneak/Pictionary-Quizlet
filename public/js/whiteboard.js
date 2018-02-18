@@ -49,6 +49,9 @@ socket.on("message", function(data) {
   if (data.name == getCookie("name")) {
     currentWord = data.word;
     document.getElementById("msg").innerHTML = data.word;
+    initWhiteBoard();
+  } else {
+    context = undefined;
   }
 });
 
