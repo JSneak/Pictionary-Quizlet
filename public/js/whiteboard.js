@@ -46,11 +46,11 @@ socket.emit("join session", data);
 socket.emit("get names", {dataCode: code});
 
 socket.on("message", function(data) {
+  initWhiteBoard();
+  context = canvas.getContext('2d');
   if (data.name == getCookie("name")) {
     currentWord = data.word;
     document.getElementById("msg").innerHTML = data.word;
-    initWhiteBoard();
-    context = canvas.getContext('2d');
   } else {
   }
 });
