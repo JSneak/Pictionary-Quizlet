@@ -77,6 +77,9 @@ socket.on("countdown", function(data) {
 setInterval(function() {
   if (parseInt(document.getElementById("countdown").innerHTML) > 0)
     document.getElementById("countdown").innerHTML = parseInt(document.getElementById("countdown").innerHTML) - 1;
+  else{
+    document.getElementById("msg").innerHTML = "";
+  }
 }, 1000);
 
 function initWhiteBoard() {
