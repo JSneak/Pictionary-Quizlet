@@ -48,6 +48,15 @@ socket.on("new name", function(data) {
   document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + "</p>";
 });
 
+socket.on("countdown", function(data) {
+  document.getElementById("countdown").innerHTML = data;
+});
+
+setInterval(function() {
+  if (parseInt(document.getElementById("countdown").innerHTML) > 0)
+    document.getElementById("countdown").innerHTML = parseInt(document.getElementById("countdown").innerHTML) - 1;
+}, 1000);
+
 function initWhiteBoard() {
 
   canvas.addEventListener('mousedown', onMouseDown, false);

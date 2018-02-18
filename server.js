@@ -28,11 +28,12 @@ function choosePlayer(code) {
 };
 
 function transitionTimer(code) {
-  setTimeout("function() {changePlayer(" + code + ");}", 5*1000);
+  setTimeout(choosePlayer.bind(null, code), 5*1000);
 }
 
 function turnTimer(code) {
-  setTimeout("function() {transition(" + code + ");}", 60*1000);
+  setTimeout(transitionTimer.bind(null, code), 60*1000);
+  io.sockets.to(code).emit("countdown", 60);
 }
 
 io.on('connection', function(socket) {
@@ -108,7 +109,7 @@ io.on('connection', function(socket) {
 
   socket.on("start game", function(data) {
     var chosenUser = choosePlayer(data);
-    socket.broadcast.to(data).emit("start game", {player: chosenUser.userName});
+    io.sockets.to(data).emit("start game", {player: chosenUser.userName});
   });
 
 });

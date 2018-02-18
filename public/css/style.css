@@ -57,3 +57,14 @@ html, body {
 .color.green { background-color: green; }
 .color.blue { background-color: blue; }
 .color.yellow { background-color: yellow; }
+
+input[type=button] {
+  z-index: 99999;
+  position: fixed;
+}
+
+#countdown {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+}
