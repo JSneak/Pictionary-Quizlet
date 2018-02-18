@@ -1,7 +1,8 @@
-var socket = io();
 
-socket.on("recieve code", function(data) {
-  console.log(data)
+socket.on("start game", function(data) {
+  if (data == getCookie("name")) {
+    initWhiteBoard()
+  }else{
+    context = undefined;
+  }
 });
-
-socket.emit("get code");

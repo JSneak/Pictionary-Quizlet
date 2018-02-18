@@ -21,5 +21,5 @@ function createSession() {
 socket.on("user recieve code", function(data) {
   code = data.Code;
   document.cookie="code=" + code;
-  location.href = "http://localhost:3000/whiteboard.html";
+  location.href = "http://localhost:3000/hostWhiteboard.html";
 });

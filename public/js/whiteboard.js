@@ -136,5 +136,3 @@ function initWhiteBoard() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
-
-initWhiteBoard();

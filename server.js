@@ -8,6 +8,7 @@ app.use(express.static(__dirname + '/public'));
 
 var Rooms = [];
 var usernames = [];//{}for json data, but we use [] because of the way we store the data
+var currentRoomPlayers = {};
 
 function getUsers(code) {
   var matching = [];
@@ -17,6 +18,21 @@ function getUsers(code) {
     }
   }
   return matching;
+}
+
+function choosePlayer(code) {
+  var user = getUsers(code)[currentRoomPlayers[code]];
+  currentRoomPlayers[code]++;
+  turnTimer(code);
+  return user;
+};
+
+function transitionTimer(code) {
+  setTimeout("function() {changePlayer(" + code + ");}", 5*1000);
+}
+
+function turnTimer(code) {
+  setTimeout("function() {transition(" + code + ");}", 60*1000);
 }
 
 io.on('connection', function(socket) {
@@ -90,6 +106,11 @@ io.on('connection', function(socket) {
     socket.leave(socket.room);
   });
 
+  socket.on("start game", function(data) {
+    var chosenUser = choosePlayer(data);
+    socket.broadcast.to(data).emit("start game", {player: chosenUser.userName});
+  });
+
 });
 
 function genRand() {
@@ -98,6 +119,7 @@ function genRand() {
   while(unique) {
     if(Rooms.indexOf(roomCode) == -1) {
       Rooms.push(roomCode);
+      currentRoomPlayers[roomCode] = 0;
       console.log(Rooms);
       return roomCode;
     }
