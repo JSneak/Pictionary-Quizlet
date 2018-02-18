@@ -9,6 +9,8 @@ app.use(express.static(__dirname + '/public'));
 var Rooms = [];
 var usernames = [];//{}for json data, but we use [] because of the way we store the data
 var currentRoomPlayers = {};
+var currentWords = {};
+var words = ["asdfkasdf", "sd"];
 
 function getUsers(code) {
   var matching = [];
@@ -20,10 +22,30 @@ function getUsers(code) {
   return matching;
 }
 
+function getUserByName(code, name) {
+  var users = getUsers(code);
+  for (var i = 0; i < users.length; i++) {
+    if (users[i].userName == name) {
+      return users[i];
+    }
+  }
+}
+
+function getSocketByUsername(code, name) {
+  for (var i = 0; i < io.sockets.clients(code).length; i++) {
+    if (io.sockets.clients(code)[i].username == name) {
+      return io.sockets.clients(code)[i];
+    }
+  }
+}
+
 function choosePlayer(code) {
   var user = getUsers(code)[currentRoomPlayers[code]];
   currentRoomPlayers[code]++;
   turnTimer(code);
+  var word = words[Math.floor(Math.random()*words.length)];
+  currentWords[code] = word;
+  io.sockets.to(code).emit("message", {"name": user.userName, "word": word});
   return user;
 };
 
@@ -121,6 +143,7 @@ function genRand() {
     if(Rooms.indexOf(roomCode) == -1) {
       Rooms.push(roomCode);
       currentRoomPlayers[roomCode] = 0;
+      currentWords[roomCode] = "";
       console.log(Rooms);
       return roomCode;
     }

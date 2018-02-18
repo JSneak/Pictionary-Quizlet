@@ -68,3 +68,9 @@ input[type=button] {
   top: 15px;
   right: 15px;
 }
+
+#msg {
+  position: fixed;
+  top: 50px;
+  right: 15px;
+}

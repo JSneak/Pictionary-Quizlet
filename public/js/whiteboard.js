@@ -36,6 +36,12 @@ socket.emit("join session", data);
 
 socket.emit("get names", {dataCode: code});
 
+socket.on("message", function(data) {
+  if (data.name == getCookie("name")) {
+    document.getElementById("msg").innerHTML = data.word;
+  }
+});
+
 socket.on("receive names", function(data) {
   for (var i = 0; i < data.length; i++) {
     var name = data[i].userName;
