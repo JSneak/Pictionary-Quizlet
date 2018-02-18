@@ -8,3 +8,10 @@ socket.on("start game", function(data) {
     context = undefined;
   }
 });
+
+function checkCorrectWord() {
+  if(document.getElementById("chatArea").innerHTML == currentWord)
+  {
+    //Get Static Amount of Points
+  }
+}
