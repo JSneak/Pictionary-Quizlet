@@ -25,6 +25,7 @@ function checkCorrectWord() {
   console.log(currentWord)
   if(document.getElementById("msg-input").value == currentWord)
   {
+    socket.emit("chat", "<b>" + getCookie("name") + ": </b> got the question right!");
     socket.emit("update points", true);
   }
 }
