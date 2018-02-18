@@ -27,6 +27,11 @@ var current = {
   color: 'black'
 };
 
+function send() {
+  socket.emit("chat", getCookie("name") + ": " + document.getElementById("msg-input").value);
+  document.getElementById("msg-input").value = "";
+}
+
 // join
 var data = {
   dataName: getCookie("name"),
@@ -40,6 +45,10 @@ socket.on("message", function(data) {
   if (data.name == getCookie("name")) {
     document.getElementById("msg").innerHTML = data.word;
   }
+});
+
+socket.on("chat", function(msg) {
+  document.getElementById("chat-box").innerHTML += "<p>" + msg + "</p>"
 });
 
 socket.on("receive names", function(data) {
