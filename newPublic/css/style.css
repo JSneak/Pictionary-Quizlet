@@ -1,0 +1,156 @@
+
+/**
+ * Fix user-agent
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/**
+ * Canvas
+ */
+
+ .chat {
+   width: 500px;
+ }
+
+ .chat .names {
+   background-color: #ccc;
+   min-height: 100px;
+   padding: 15px;
+ }
+
+ .main {
+   margin-left: 500px;
+   padding-left: 30px;
+ }
+
+.whiteboard {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 500px;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+
+.colors {
+  position: fixed;
+  top: 5px;
+  left: 515px;
+}
+
+.color {
+  display: inline-block;
+  height: 48px;
+  width: 48px;
+}
+
+.color.black { background-color: black; }
+.color.red { background-color: red; }
+.color.green { background-color: green; }
+.color.blue { background-color: blue; }
+.color.yellow { background-color: yellow; }
+
+input[type=button] {
+  z-index: 99999;
+  position: fixed;
+}
+
+#countdown {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+}
+
+#msg {
+  position: fixed;
+  top: 50px;
+  right: 15px;
+}
+
+#send {
+  width: 100px;
+  position: absolute;
+  bottom: 5px;
+  left: 385px;
+}
+
+#msg-input {
+  width: 375px;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+#sButton {
+  top: 75px;
+  left: 515px;
+}
+
+#chat-box {
+  padding: 15px;
+}
+
+h3 {
+  font-weight: bold !important;
+  font-size: 1.25rem !important;
+}
+
+input[type=text] {
+  color: #333;
+}
+
+input[type=text]::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #777;
+}
+input[type=text]::-moz-placeholder { /* Firefox 19+ */
+  color: #777;
+}
+input[type=text]:-ms-input-placeholder { /* IE 10+ */
+  color: #777;
+}
+input[type=text]:-moz-placeholder { /* Firefox 18- */
+  color: #777;
+}
+
+.chat {
+  border-right: 1px solid #ccc;
+  height: 100vh;
+  box-shadow: 2px 3px 3px #ccc;
+}
+
+canvas {
+  width: 500px;
+  height: 500px;
+}
+
+#code {
+  position: fixed;
+  top: 5px;
+  left: 75%;
+  transform: translateX(-50%);
+}
+
+#uniqueDeck {
+  position: fixed;
+  top: 5px;
+  left: 395px;
+  width: 100px;
+}

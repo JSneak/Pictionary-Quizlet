@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script src="https://use.fontawesome.com/d0bc9af035.js"></script>
+  </head>
+  <body>
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <section id="particles-js" class="header">
+      <h2>Join a Room</h2>
+      <input type="text" placeholder="Code (Ex: 1234)" id="code">
+      <input type="text" placeholder="Name (Ex: John Doe)" id="name">
+      <input class="join" type="button" onClick="joinSession()" value="Join">
+      <p style="font-weight: bold;">OR</p>
+      <input type="text" placeholder="Name" id="hostName">
+      <input class="join" type="button" onClick="createSession()" value="Create">
+    </section>
+    <script src="./js/index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Socket.IO whiteboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+  <link rel="stylesheet" href="css/bulma.css">
+</head>
+<body>
+
+  <div class="chat">
+    <div class="names">
+        <h3>Players</h3>
+    </div>
+    <div id="chat-box">
+
+    </div>
+    <input type="text" id="msg-input" class="input" placeholder="Type your answer here...">
+    <input type="button" value="Send" onclick="send()" class="button is-link" id="send">
+  </div>
+
+  <div class="main">
+    <p id="countdown">0</p>
+    <p id="msg"></p>
+    <p id="code"></p>
+    <canvas id="canvas" class="whiteboard" ></canvas>
+
+    <div class="colors">
+      <div class="color black"></div>
+      <div class="color red"></div>
+      <div class="color green"></div>
+      <div class="color blue"></div>
+      <div class="color yellow"></div>
+    </div>
+  </div>
+  <script src="./js/main.js"></script>
+  <script src="./js/whiteboard.js"></script>
+</body>
+</html>
