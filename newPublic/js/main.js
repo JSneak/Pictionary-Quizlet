@@ -16,6 +16,38 @@ function getCookie(cname) {
     return "";
 }
 
+var currentWord;
+//////////// PAge first Load
+addNewName(getCookie("name"));
+document.getElementById("code").innerHTML = "Code: " + getCookie("code");
+
+if(getCookie("rank") == "user") {
+  var data = {
+    dataCode: getCookie("code"),
+    dataName: getCookie("name")
+  }
+  socket.emit("join session", data);
+}
+
+socket.on("join success", function(data) {
+  var players = data.listOfPlayers;
+  for(var i = 0;i<Object.keys(players[0]).length; i++) {
+    addNewName(players[0][i].username);
+  }
+});
+
+socket.on("new player", function(data) {
+  console.log(data)
+  var name = data.userName;
+  addNewName(name)
+});
+
+function addNewName(name) {
+  document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + " - 0</p>";
+}
+
+////////////////////////
+
 
 socket.on("start game", function(data) {
   console.log("hi")
@@ -48,25 +80,11 @@ function checkCorrectWord() {
   }
 }
 
-var currentWord;
-
-var code = getCookie("code");
-
-document.getElementById("code").innerHTML = "Code: " + getCookie("code");
-
 function send() {
   checkCorrectWord()
   socket.emit("chat", "<b>" + getCookie("name") + ": </b>" + document.getElementById("msg-input").value);
   document.getElementById("msg-input").value = "";
 }
-
-// join
-var data = {
-  dataName: getCookie("name"),
-  dataCode: code
-}
-
-socket.emit("get names", {dataCode: code});
 
 var drawingAllowed = false;
 socket.on("message", function(data) {
@@ -90,11 +108,6 @@ socket.on("receive names", function(data) {
     var name = data[i].userName;
     document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + " - 0</p>";
   }
-});
-
-socket.on("new player", function(data) {
-  var name = data.userName;
-  document.getElementsByClassName("names")[0].innerHTML += "<p>" + name + " - 0</p>";
 });
 
 socket.on("countdown", function(data) {

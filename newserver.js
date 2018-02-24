@@ -8,53 +8,24 @@ app.use(express.static(__dirname + '/newPublic'));
 var Rooms = []; //List of all rooms with codes.
 
 
+//Keep track of all Players
+//Keys will be Room code
+//Value with be player data
+// var player = {points: 0, username: "Tim"}
+// Players = { '512': [{points: 0, username: "Tim"},{points: 1, username: "Ben"}]}
+
+var Players = {};
+
+
 io.on('connection', function(socket) {
 
-  socket.on("Create Session", function(Data) {
-      console.log(Data)
-  		code = parseInt(Data.Code)
-  		var Name = Data.Name;
-      socket.join(code)
-  		socket.username = Name;
-      socket.rank = "Host";
-      socket.room = code;
-      socket.points = 0;
-  		socket.emit('host recieve code', {
-        listOfPlayers: getNames(),
-  			Code: code
-  		});
-  	});
-  //Change this so that this runs on the whiteboard.html
-  socket.on("join session", function(data) {
-      console.log(data.dataCode);
-  		var code = parseInt(data.dataCode);
-      if(Rooms.indexOf(code) != -1)
-      {
-      	socket.join(code)
-      	socket.username = data.dataName;
-        socket.rank = "User"
-        socket.room = code
-        socket.points = 0;
-      	socket.emit('user recieve code', {
-          listOfPlayers: getNames(),
-      		Code: code
-      	});//returns back to the caller
-        socket.broadcast.to(code).emit("new player", {userName:data.dataName, code:code, rank:"User"});
-      } else {
-        console.log("bad code: " + code);
-      	socket.emit('Bad Code', {
-      		result:false
-      	});
-      }
-  	});
-
+  //Called in index.html
   socket.on("generate code", function() {
     var roomCode = Math.floor(Math.random() * 100000);
     var unique = true;
     while(unique) {
       if(Rooms.indexOf(roomCode) == -1) {
         Rooms.push(roomCode);
-        console.log(Rooms)
         socket.emit("code created",roomCode)
         unique = false;
       }else{
@@ -63,29 +34,89 @@ io.on('connection', function(socket) {
     }
   });
 
-  // socket.on("get names", function(data) {
-  //   console.log(data.dataCode)
-  //   console.log(socket.username)
-  //     var code = data.dataCode;
-  //     var groupList = [];
-  //
-  //     var roster = io.of('/').in(code).clients;
-  //     console.log(roster);
-  //     roster.forEach(function(user) {
-  //       groupList.push(user.username)
-  //     });
-  //     socket.emit("receive names", groupList);
-  // });
 
-  function getNames() {
-    console.log(socket.username)
+  socket.on("Create Session", function(Data) {
+  		code = parseInt(Data.Code);
+      console.log("Create Session: " + code)
+  		var Name = Data.Name;
+      socket.join(code)
+  		socket.username = Name;
+      socket.rank = "Host";
+      socket.room = code;
+      socket.points = 0;
+
+      var data = {
+        username: Name,
+        rank: "Host",
+        points: 0
+      }
+      var test = [data]
+      Players[code] = test
+  	});
+
+    socket.on("validate code", function(data) {
+      if(Rooms.indexOf(data.dataCode) != -1)
+      {
+        var returnData = {
+          auth: true,
+          code: data.dataCode
+        }
+        socket.emit("valid code", returnData);
+      }else{
+        var returnData = {
+          auth: false,
+          code: data.dataCode
+        }
+        socket.emit("valid code", returnData)
+      }
+    });
+
+    //called in main.js
+    socket.on("join session", function(data) {
+      var code = parseInt(data.dataCode);
+      var name = data.dataName
+      //console.log("Join Session: " + code);
+      if(Rooms.indexOf(code) != -1)
+      {
+        socket.join(code)
+        socket.username = name;
+        socket.rank = "User"
+        socket.room = code
+        socket.points = 0;
+        var data = {
+          username: name,
+          rank: "User",
+          points: 0
+        }
+        var vals = Object.keys(Players).map(function(code) {
+            return Players[code];
+        });
+        socket.emit('join success', {
+          listOfPlayers: vals,
+          Code: code
+        });//returns back to the caller
+        vals.push(data);
+        Players[code] = vals;
+        console.log(Players[code])
+        socket.broadcast.to(code).emit("new player", {code:code, userName:name});
+      } else {
+        console.log("bad code: " + code);
+        socket.emit('Bad Code', {
+          result:false
+        });
+      }
+    });
+
+  function getNames(code) {
     io.of('/').in(code).clients(function(error,clients){
       var groupList = [];
       for(var i in clients) {
+        console.log(clients)
         if(socket.room == clients[i])
           groupList.push(clients[i].username)
       }
       console.log(groupList)
+      return groupList;
     });
   }
 
@@ -95,7 +126,6 @@ io.on('connection', function(socket) {
 
   socket.on('disconnect', function(data) {
     console.log("Disconnect")
-    console.log(data)
   });
 
 });
