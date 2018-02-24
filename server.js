@@ -37,11 +37,11 @@ io.on('connection', function(socket) {
   		});
   	});
 
-    socket.on("get names", function(data) {
-      var code = parseInt(data.dataCode);
-      groupList = getUsers(code);
-      socket.emit("receive names", groupList);
-    })
+  socket.on("get names", function(data) {
+    var code = parseInt(data.dataCode);
+    groupList = getUsers(code);
+    socket.emit("receive names", groupList);
+  })
 
   socket.on("join session", function(data) {//Checks the code
   		var GivenName = data.dataName;
